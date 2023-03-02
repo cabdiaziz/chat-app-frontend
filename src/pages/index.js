@@ -1,7 +1,6 @@
 import Dashboard from "./Dashboard";
-import Landing from "./Landing";
+import Login from "./authentication/Login";
+import Signup from "./authentication/Signup";
 import Error from "./Error";
-import Login from "./Login";
-import Signup from "./Signup";
 
-export { Dashboard, Landing, Error, Login, Signup };
+export { Dashboard, Error, Login, Signup };
