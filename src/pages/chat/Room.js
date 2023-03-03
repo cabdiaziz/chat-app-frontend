@@ -1,37 +1,25 @@
 import React from "react";
 import { Typography, TextField, Button, Grid } from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
 import Paper from "@mui/material/Paper";
 
-const Message = () => {
+const Room = () => {
   return (
     <>
       <Paper
         sx={{
-          height: 440,
+          height: 150,
           width: 600,
-          marginLeft: 5,
+          margin: 5,
         }}
       >
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <Typography variant="h4" sx={{ marginLeft: 25 }}>
               {" "}
-              Message
+              Room
             </Typography>
           </Grid>
-          <Grid item xs={12}>
-            <Paper
-              sx={{
-                height: 300,
-                width: 400,
-                marginLeft: 10,
-                overflowY: "scroll",
-              }}
-            >
-              <p>Conversation here...</p>
-            </Paper>
-          </Grid>
+
           <Grid
             item
             xs={4}
@@ -39,11 +27,11 @@ const Message = () => {
               marginLeft: 10,
             }}
           >
-            <TextField label="Message..." />
+            <TextField label="Room name" />
           </Grid>
           <Grid item xs={2.5}>
-            <Button variant="contained" size="large" endIcon={<SendIcon />}>
-              Send
+            <Button variant="contained" size="large">
+              Join
             </Button>
           </Grid>
         </Grid>
@@ -52,4 +40,4 @@ const Message = () => {
   );
 };
 
-export default Message;
+export default Room;
