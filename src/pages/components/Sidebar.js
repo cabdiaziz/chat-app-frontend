@@ -125,9 +125,7 @@ const Sidebar = () => {
               color="inherit"
               noWrap
               sx={{ flexGrow: 1 }}
-            >
-              Dashboard
-            </Typography>
+            ></Typography>
 
             <IconButton
               size="large"
