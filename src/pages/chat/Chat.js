@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import Sidebar from "../components/Sidebar";
 import { io } from "socket.io-client";
-import { Message, Room } from "./";
+import { Message } from "./";
 import { useSelector } from "react-redux";
 
 const socket = io("http://localhost:7000");
