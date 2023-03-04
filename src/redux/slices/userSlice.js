@@ -9,7 +9,7 @@ const initialState = {
   error: null,
 };
 
-const userSlice = createSlice({
+const slice = createSlice({
   name: "user",
   initialState,
   extraReducers: {
@@ -32,4 +32,4 @@ const userSlice = createSlice({
   },
 });
 
-export default userSlice.reducer;
+export default slice.reducer;

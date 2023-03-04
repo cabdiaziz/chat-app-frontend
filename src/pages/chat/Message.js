@@ -3,15 +3,17 @@ import { Typography, TextField, Button, Grid } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import Paper from "@mui/material/Paper";
 
-const Message = ({ room, socket }) => {
+const Message = ({ room, socket, email }) => {
   const [message, setMsg] = useState("");
   const [messageList, setMessageList] = useState([]);
   const sendMsg = async () => {
     if (message !== "") {
       const msgData = {
-        room: room,
-        message: message,
+        room,
+        message,
+        email,
       };
+      console.log("send backend =", msgData);
       // await socket.emit("send_message", msgData);
       setMessageList((list) => [...list, msgData]);
       setMsg("");
@@ -54,6 +56,7 @@ const Message = ({ room, socket }) => {
               {messageList.map((content, i) => {
                 return (
                   <div key={i}>
+                    {/* if msg */}
                     <Typography
                       style={{
                         alignItems: "center",
