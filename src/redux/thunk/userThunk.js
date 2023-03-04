@@ -39,9 +39,15 @@ export const loginUser = createAsyncThunk(
           headers, //? token and type of data like application/json etc.
         }
       );
+      console.log("res == ", res);
       return res;
     } catch (e) {
       return e.response.status;
     }
   }
+);
+
+export const userProfile = createAsyncThunk(
+  "sliceName/fun-name",
+  async () => {}
 );

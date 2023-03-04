@@ -1,8 +1,9 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import Sidebar from "./components/Sidebar";
-
 const Dashboard = () => {
+  // loggedIn user dispatch(getUserProfile());
+
   return (
     <Box sx={{ display: "flex" }}>
       <Sidebar />

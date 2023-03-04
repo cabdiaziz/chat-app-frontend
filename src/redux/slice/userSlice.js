@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createUser } from "../thunk/userThunk";
+import { createUser, loginUser } from "../thunk/userThunk";
 
 //* login slice & signup slice
 
@@ -17,6 +17,10 @@ const userSlice = createSlice({
       state.isLoading = true;
     },
     [createUser.fulfilled]: (state, { payload }) => {
+      state.isLoading = false;
+      state.user = payload.data;
+    },
+    [loginUser.fulfilled]: (state, { payload }) => {
       state.isLoading = false;
       state.user = payload.data;
     },

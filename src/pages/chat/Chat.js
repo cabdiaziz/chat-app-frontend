@@ -4,13 +4,7 @@ import Sidebar from "../components/Sidebar";
 import { io } from "socket.io-client";
 import { Message, Room } from "./";
 
-let token = localStorage.getItem("token");
-
-const socket = io("http://localhost:7000", {
-  extraHeaders: {
-    token: token,
-  },
-});
+const socket = io("http://localhost:7000");
 
 socket.on("connect", () => {
   console.log("Connected to Socket.io...!"); // connected to the server as client.
@@ -27,9 +21,9 @@ const Chat = () => {
       <Box sx={{ display: "flex" }}>
         <Sidebar />
         <Box component="main" sx={{ flexGrow: 1, p: 10 }}>
-          <Typography variant="h3">Chat Room</Typography>
+          <Typography variant="h3">Live Chat</Typography>
           <Room />
-          <Message />
+          <Message room={"room"} socket={socket} />
         </Box>
       </Box>
     </>
