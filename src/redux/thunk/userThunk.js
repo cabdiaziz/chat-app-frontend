@@ -10,7 +10,7 @@ export const createUser = createAsyncThunk(
         "Content-Type": "application/json",
       };
       const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_API}auth/users/signup`,
+        `${process.env.REACT_APP_BACKEND_API}/auth/users/signup`,
         { user }, //* user data
         {
           headers,
@@ -33,21 +33,16 @@ export const loginUser = createAsyncThunk(
         Authorization: "Bearer " + authToken,
       };
       const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_API}auth/users/login`,
+        `${process.env.REACT_APP_BACKEND_API}/auth/users/login`,
         {},
         {
           headers, //? token and type of data like application/json etc.
         }
       );
-      console.log("res == ", res);
+
       return res;
-    } catch (e) {
-      return e.response.status;
+    } catch (err) {
+      return err.message;
     }
   }
-);
-
-export const userProfile = createAsyncThunk(
-  "sliceName/fun-name",
-  async () => {}
 );

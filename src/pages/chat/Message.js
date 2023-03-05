@@ -2,30 +2,39 @@ import React, { useState, useEffect } from "react";
 import { Typography, TextField, Button, Grid } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import Paper from "@mui/material/Paper";
+import { saveMessage, getAllMessages } from "../../redux/thunk/messageThunk";
+import { useDispatch } from "react-redux";
 
 const Message = ({ room, socket, email }) => {
   const [message, setMsg] = useState("");
   const [messageList, setMessageList] = useState([]);
+  const dispatch = useDispatch();
+
   const sendMsg = async () => {
-    if (message !== "") {
+    if (message !== "" && room !== "") {
       const msgData = {
-        room,
         message,
+        room,
         email,
       };
-      console.log("send backend =", msgData);
-      // await socket.emit("send_message", msgData);
+      const reqData = {
+        userToken: localStorage.getItem("token"),
+        data: msgData,
+      };
+
+      dispatch(saveMessage(reqData));
+      await socket.emit("sendMsg", msgData);
+
       setMessageList((list) => [...list, msgData]);
       setMsg("");
-      console.log("Message : ", message);
     }
   };
 
   useEffect(() => {
-    socket.on("receive_message", (data) => {
+    socket.on("receiveMessage", (data) => {
       setMessageList((list) => [...list, data]);
     });
-  }, [socket]);
+  }, [dispatch, socket]);
 
   return (
     <>
@@ -52,11 +61,9 @@ const Message = ({ room, socket, email }) => {
                 overflowY: "scroll",
               }}
             >
-              {/* test start*/}
               {messageList.map((content, i) => {
                 return (
                   <div key={i}>
-                    {/* if msg */}
                     <Typography
                       style={{
                         alignItems: "center",
@@ -73,24 +80,6 @@ const Message = ({ room, socket, email }) => {
                   </div>
                 );
               })}
-              {/* Test End */}
-
-              {/* if user */}
-              {/* user-1 */}
-              {/* ..moved */}
-              {/* user-2 */}
-              {/* <Typography
-                style={{
-                  alignItems: "center",
-                  backgroundColor: "#f8e896",
-                  marginLeft: "150px",
-                  marginBottom: "10px",
-                  padding: "10px",
-                  width: "60%",
-                }}
-              >
-                {""}
-              </Typography> */}
             </Paper>
           </Grid>
           <Grid

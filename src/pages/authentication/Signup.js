@@ -32,10 +32,10 @@ const Signup = () => {
 
     const result = await dispatch(createUser(user));
     if (result.type === "user/createUser/fulfilled") {
-      if (result.payload === 201) {
-        alert("Signup Successful");
-      } else {
+      if (result.payload === 401) {
         alert("Signup Failed");
+      } else {
+        alert("Signup Successful");
       }
     } else if (result.type === "user/createUser/rejected") {
       alert("OAuth Rejected");

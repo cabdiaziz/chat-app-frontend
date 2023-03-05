@@ -1,28 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createUser } from "../thunk/userThunk";
-
-//* login slice & signup slice
+import { saveMessage } from "../thunk/messageThunk";
 
 const initialState = {
   isLoading: false,
-  user: {},
+  message: {},
   error: null,
 };
 
 const slice = createSlice({
-  name: "user",
+  name: "message",
   initialState,
   extraReducers: {
-    [createUser.pending]: (state) => {
+    [saveMessage.pending]: (state) => {
       state.isLoading = true;
     },
-    [createUser.fulfilled]: (state, { payload }) => {
+    [saveMessage.fulfilled]: (state, { payload }) => {
       state.isLoading = false;
-      state.user = payload.data;
+      state.message = payload.data;
     },
-    [createUser.rejected]: (state, { payload }) => {
+    [saveMessage.rejected]: (state, { payload }) => {
       state.isLoading = false;
-      state.user = initialState.user; //* equal to  null value
+      state.message = initialState.message; //* assign null if rejected
       state.error = payload.error.message;
     },
   },

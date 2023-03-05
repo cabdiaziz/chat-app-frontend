@@ -1,6 +1,6 @@
 import "./App.css";
-import { Dashboard, Login, Signup, Error } from "./pages";
-import { Chat } from "./pages/chat";
+import { Login, Signup, Error } from "./pages";
+import { Dashboard } from "./pages/chat";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ProtectedRoutes from "./pages/components/ProtectedRoutes";
 
@@ -13,7 +13,6 @@ function App() {
         <Route path="/*" element={<Error />} />
         <Route element={<ProtectedRoutes />}>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/chat" element={<Chat />} />
         </Route>
       </Routes>
     </BrowserRouter>

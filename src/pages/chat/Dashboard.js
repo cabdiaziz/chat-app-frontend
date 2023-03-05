@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   Box,
@@ -11,37 +11,35 @@ import {
   FormControl,
 } from "@mui/material";
 import Sidebar from "../components/Sidebar";
-import { io } from "socket.io-client";
-import { Message } from "./";
-import { useSelector } from "react-redux";
+import io from "socket.io-client";
+import { Message } from ".";
+import { useSelector, useDispatch } from "react-redux";
+// import { connect } from "../../redux/thunk/messageThunk";
 
-const socket = io("http://localhost:7000");
+const socket = io.connect("http://localhost:7000");
 
-socket.on("connect", () => {
-  console.log("Connected to Socket.io...!"); // connected to the server as client.
-  <Typography>user connected</Typography>;
-});
-
-socket.on("newMsg", (message) => {
-  console.log("listedData: ", message);
-});
-
-const Chat = () => {
+const Dashboard = () => {
   const { user } = useSelector((state) => state.user);
   const [room, setRoom] = useState("");
 
+  const email = user.email;
+  const joinRoom = () => {
+    if (email !== "" && room !== "") {
+      socket.emit("joinRoom", room);
+    } else {
+      console.log("empty..!!");
+    }
+  };
   const handleChange = (event) => {
-    console.log("value=", event.target.value);
     setRoom(event.target.value);
   };
-  console.log("test-user = ", user.email);
   return (
     <>
       <Box sx={{ display: "flex" }}>
         <Sidebar />
         <Box component="main" sx={{ flexGrow: 1, p: 10 }}>
           <Typography variant="h3">Live Chat</Typography>
-          {/* <Room /> */}
+
           <Paper
             sx={{
               height: 200,
@@ -80,17 +78,18 @@ const Chat = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={2.5} sx={{ marginTop: 3.6, marginLeft: 2 }}>
-                <Button variant="contained" size="large">
+                <Button onClick={joinRoom} variant="contained" size="large">
                   Join
                 </Button>
               </Grid>
             </Grid>
           </Paper>
-          <Message room={room} socket={socket} />
+
+          <Message room={room} socket={socket} email={email} />
         </Box>
       </Box>
     </>
   );
 };
 
-export default Chat;
+export default Dashboard;
