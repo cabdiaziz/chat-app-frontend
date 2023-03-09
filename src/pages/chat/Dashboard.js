@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import {
   Typography,
   Box,
@@ -6,33 +6,39 @@ import {
   Button,
   FormLabel,
   Paper,
-  Select,
-  MenuItem,
-  FormControl,
+  TextField,
 } from "@mui/material";
 import Sidebar from "../components/Sidebar";
-import io from "socket.io-client";
-import { Message } from ".";
-import { useSelector, useDispatch } from "react-redux";
-// import { connect } from "../../redux/thunk/messageThunk";
+import { Message } from "./";
+import { io } from "socket.io-client";
+const socket = io("http://localhost:7000");
+// const socket = io.connect("http://localhost:7000");
 
-const socket = io.connect("http://localhost:7000");
+// client-side
+socket.on("connect", () => {
+  console.log("Client Connected : ", socket.id); // random id every refresh
+  socket.on("receiveMessage", (message) => {
+    console.log("received data", message);
+  });
+});
 
 const Dashboard = () => {
-  const { user } = useSelector((state) => state.user);
   const [room, setRoom] = useState("");
+  const roomRef = useRef(null);
 
-  const email = user.email;
   const joinRoom = () => {
-    if (email !== "" && room !== "") {
+    const roomValue = roomRef.current.value;
+    setRoom(roomValue);
+    console.log("room ==", roomRef.current.value);
+    if (room !== "") {
       socket.emit("joinRoom", room);
-    } else {
-      console.log("empty..!!");
     }
   };
-  const handleChange = (event) => {
-    setRoom(event.target.value);
-  };
+
+  // const handleJoinRoom = useCallback((event) => {
+  //   setRoom(event.target.value);
+  // }, []);
+
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -62,30 +68,17 @@ const Dashboard = () => {
                   marginLeft: 10,
                 }}
               >
-                {/* <TextField label="Room name" /> */}
-                <FormControl fullWidth>
-                  <FormLabel>Room</FormLabel>
-                  <Select
-                    value={room}
-                    onChange={(event) => {
-                      handleChange(event);
-                    }}
-                  >
-                    <MenuItem value={"room1"}>Room 1</MenuItem>
-                    <MenuItem value={"room2"}>Room 2</MenuItem>
-                    <MenuItem value={"room3"}>Room 3</MenuItem>
-                  </Select>
-                </FormControl>
+                <FormLabel>Room</FormLabel>
+                <TextField inputRef={roomRef} style={{ width: 250 }} />
               </Grid>
-              <Grid item xs={2.5} sx={{ marginTop: 3.6, marginLeft: 2 }}>
+              <Grid item xs={2} sx={{ marginTop: 3.6, marginLeft: 7 }}>
                 <Button onClick={joinRoom} variant="contained" size="large">
                   Join
                 </Button>
               </Grid>
             </Grid>
           </Paper>
-
-          <Message room={room} socket={socket} email={email} />
+          <Message currentRoom={room} socket={socket} />
         </Box>
       </Box>
     </>

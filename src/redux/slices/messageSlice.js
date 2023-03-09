@@ -3,7 +3,7 @@ import { saveMessage } from "../thunk/messageThunk";
 
 const initialState = {
   isLoading: false,
-  message: {},
+  messages: {},
   error: null,
 };
 
@@ -16,12 +16,14 @@ const slice = createSlice({
     },
     [saveMessage.fulfilled]: (state, { payload }) => {
       state.isLoading = false;
-      state.message = payload.data;
+      // const message = { message: payload.data.messages };
+      // state.messages.push(message);
+      state.messages = payload.data.messages;
     },
     [saveMessage.rejected]: (state, { payload }) => {
       state.isLoading = false;
-      state.message = initialState.message; //* assign null if rejected
-      state.error = payload.error.message;
+      state.messages = initialState.messages; //* assign null if rejected
+      state.error = payload.error.messages;
     },
   },
 });

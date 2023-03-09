@@ -37,6 +37,7 @@ const Login = () => {
       } else {
         localStorage.setItem("token", userToken);
         console.log("login successful");
+        // console.log("email", result.payload);
         navigate("/dashboard");
       }
     } else if (result.type === "user/loginUser/rejected") {

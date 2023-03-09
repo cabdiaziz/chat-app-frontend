@@ -1,38 +1,50 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Typography, TextField, Button, Grid } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import Paper from "@mui/material/Paper";
-import { saveMessage, getAllMessages } from "../../redux/thunk/messageThunk";
-import { useDispatch } from "react-redux";
+import { saveMessage } from "../../redux/thunk/messageThunk";
+import { useDispatch, useSelector } from "react-redux";
 
-const Message = ({ room, socket, email }) => {
-  const [message, setMsg] = useState("");
+const Message = ({ currentRoom, socket }) => {
   const [messageList, setMessageList] = useState([]);
+  const messageRef = useRef(null);
+  // const [currentMsg, setMsg] = useState("");
+
   const dispatch = useDispatch();
+  const { messages } = useSelector((state) => state.messages);
+  console.log("state==", messages);
 
   const sendMsg = async () => {
-    if (message !== "" && room !== "") {
+    const messageValue = messageRef.current.value;
+    console.log("rom=", currentRoom);
+    if (messageValue !== "" && currentRoom !== "") {
       const msgData = {
-        message,
-        room,
-        email,
+        message: messageValue,
+        room: currentRoom,
       };
+      console.log("send = ", msgData);
       const reqData = {
         userToken: localStorage.getItem("token"),
         data: msgData,
       };
-
-      dispatch(saveMessage(reqData));
       await socket.emit("sendMsg", msgData);
+      dispatch(saveMessage(reqData));
 
       setMessageList((list) => [...list, msgData]);
-      setMsg("");
+      messageRef.current.value = "";
     }
   };
 
+  // setMessageList((list) => [...list,]); // to read all old chats.
   useEffect(() => {
-    socket.on("receiveMessage", (data) => {
-      setMessageList((list) => [...list, data]);
+    socket.on("receiveMessage", (message) => {
+      console.log("receiveMessage == ", message);
+      setMessageList((list) => [...list, message]);
+      const reqData = {
+        userToken: localStorage.getItem("token"),
+        data: message,
+      };
+      dispatch(saveMessage(reqData));
     });
   }, [dispatch, socket]);
 
@@ -91,13 +103,7 @@ const Message = ({ room, socket, email }) => {
           >
             <TextField
               label="Message..."
-              value={message}
-              onChange={(event) => {
-                setMsg(event.target.value);
-              }}
-              onKeyPress={(event) => {
-                event.key === "Enter" && sendMsg();
-              }}
+              inputRef={messageRef}
               style={{ width: 300 }}
             />
           </Grid>
@@ -119,4 +125,4 @@ const Message = ({ room, socket, email }) => {
   );
 };
 
-export default Message;
+export default React.memo(Message);
